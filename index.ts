@@ -15,15 +15,22 @@ app.use(
 app.use(express.json());
 //items
 app.get('/items', async (req, res) => {
-    res.send(await item.findMany({include:{boughtBy:{select:{User:true,quantity:true}}}}))
+    res.send(
+        await item.findMany({
+            include: { boughtBy: { select: { User: true, quantity: true } } },
+        })
+    );
 });
 
-
-
-
+app.get('/items/:title', async (req, res) => {
+    const itemToSend = await item.findUnique({
+        where: { title: req.params.title },
+        include: { boughtBy: { select: { User: true, quantity: true } } },
+    });
+    if(!itemToSend)return res.send(`Item with title '${req.params.title}' doesn't exist.`)
+    res.send(itemToSend);
+});
 
 app.listen(3009, () => {
     console.log(`Server started on http://localhost:3009`);
 });
-
-

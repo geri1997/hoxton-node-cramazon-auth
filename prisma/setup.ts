@@ -45,42 +45,42 @@ const items: Prisma.ItemCreateInput[] = [
 const orders: Prisma.OrderCreateInput[] = [
     {
         quantity: 2,
-        Item: { connect: { title: 'Bed' } },
+        Item: { connect: { title: 'bed' } },
         User: { connect: { email: 'nicolas@email.com' } },
     },
     {
         quantity: 5,
-        Item: { connect: { title: 'Car' } },
+        Item: { connect: { title: 'car' } },
         User: { connect: { email: 'arita@email.com' } },
     },
     {
         quantity: 7,
-        Item: { connect: { title: 'Shelf' } },
+        Item: { connect: { title: 'shelf' } },
         User: { connect: { email: 'rinor@email.com' } },
     },
     {
         quantity: 1,
-        Item: { connect: { title: 'Table' } },
+        Item: { connect: { title: 'table' } },
         User: { connect: { email: 'nicolas@email.com' } },
     },
     {
         quantity: 10,
-        Item: { connect: { title: 'Bicycle' } },
+        Item: { connect: { title: 'bicycle' } },
         User: { connect: { email: 'arita@email.com' } },
     },
     {
         quantity: 20,
-        Item: { connect: { title: 'Laptop' } },
+        Item: { connect: { title: 'laptop' } },
         User: { connect: { email: 'rinor@email.com' } },
     },
     {
         quantity: 13,
-        Item: { connect: { title: 'Car' } },
+        Item: { connect: { title: 'car' } },
         User: { connect: { email: 'nicolas@email.com' } },
     },
     {
         quantity: 17,
-        Item: { connect: { title: 'Bed' } },
+        Item: { connect: { title: 'bed' } },
         User: { connect: { email: 'rinor@email.com' } },
     },
 ];
@@ -108,9 +108,13 @@ async function setupData() {
     //     });
     // }
     for (const user of users) {
+        user.name = user.name.toLowerCase();
+        user.email = user.email.toLowerCase();
         await prisma.user.create({ data: user });
     }
     for (const item of items) {
+        item.title = item.title.toLowerCase();
+        item.image = item.image.toLowerCase();
         await prisma.item.create({ data: item });
     }
     for (const order of orders) {
