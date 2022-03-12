@@ -1,6 +1,6 @@
 import express from 'express';
 import cors from 'cors';
-import { Prisma, PrismaClient } from '@prisma/client';
+import { prisma, Prisma, PrismaClient } from '@prisma/client';
 const { user, item, order } = new PrismaClient({
     log: ['query'],
 });
@@ -82,14 +82,15 @@ app.patch('/users/:id', async (req, res) => {
         })
     );
 });
-// app.get('/users/:id', async (req, res) => {
-//     const userToSend = await user.findUnique({
-//         where: { id: +req.params.id.toLowerCase() },
-//         include: { itemsOrdered: { select: { Item: true, quantity: true } } },
-//     });
-//     if(!userToSend)return res.send(`User with id '${req.params.id}' doesn't exist.`)
-//     res.send(userToSend);
-// });
+app.get('/users/id/:id', async (req, res) => {
+    const userToSend = await user.findUnique({
+        where: { id: +req.params.id.toLowerCase() },
+        include: { itemsOrdered: { select: { Item: true, quantity: true } } },
+    });
+    if (!userToSend)
+        return res.send(`User with id '${req.params.id}' doesn't exist.`);
+    res.send(userToSend);
+});
 
 app.post('/create-item', async (req, res) => {
     const { title, image } = req.body;
@@ -127,7 +128,12 @@ app.post('/create-order', async (req, res) => {
                 quantity,
             },
         });
-        res.send(createdOrder);
+        res.send(
+            await user.findFirst({
+                where: { id: createdOrder.userId },
+                include: { itemsOrdered: { include: { Item: true } } },
+            })
+        );
     } catch (err) {
         res.status(400).send(err);
     }
@@ -142,6 +148,20 @@ app.post('/remove-order', async (req, res) => {
     } catch (error) {
         res.status(400).send(error);
     }
+});
+
+app.post('/update-quantity', async (req, res) => {
+    const { userId, itemId, quantity } = req.body;
+    await order.update({
+        data: { quantity },
+        where: { userId_itemId: { itemId, userId } },
+    });
+    res.send(
+        await user.findFirst({
+            where: { id: userId },
+            include: { itemsOrdered: { include: { Item: true } } },
+        })
+    );
 });
 
 app.listen(3009, () => {
