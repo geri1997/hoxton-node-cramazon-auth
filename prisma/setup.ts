@@ -113,6 +113,10 @@ async function setupData() {
     //         },
     //     });
     // }
+    await prisma.order.deleteMany()
+    await prisma.user.deleteMany()
+    await prisma.item.deleteMany()
+    
     for (const user of users) {
         user.name = user.name.toLowerCase();
         user.email = user.email.toLowerCase();
