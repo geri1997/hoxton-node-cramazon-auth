@@ -1,5 +1,10 @@
 import express from 'express';
 import cors from 'cors';
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
+
+import 'dotenv/config';
+
 import { prisma, Prisma, PrismaClient } from '@prisma/client';
 const { user, item, order } = new PrismaClient({
     log: ['query'],
@@ -43,6 +48,23 @@ app.get('/items/:title', async (req, res) => {
 });
 
 //users
+
+app.post(`/sign-up`, async (req, res) => {
+    const { name, email, password } = req.body;
+    try {
+    // const existingUser = await user.findUnique({ where: { email } });
+    const hashedPassword = bcrypt.hashSync(password, 10);
+
+    const createduser = await user.create({
+        data: { email, name, password: hashedPassword },
+    });
+    //@ts-ignore
+    const token = jwt.sign(password, process.env.SECRET);
+    return res.send({ createduser, token });
+    } catch (error) {
+        res.status(409).send({ error: 'User already exists or missing data.' });
+    }
+});
 app.get('/users', async (req, res) => {
     res.send(
         await user.findMany({
@@ -93,13 +115,14 @@ app.get('/users/id/:id', async (req, res) => {
 });
 
 app.post('/create-item', async (req, res) => {
-    const { title, image } = req.body;
+    const { title, image, price } = req.body;
     try {
         res.send(
             await item.create({
                 data: {
                     image: image.toLowerCase(),
                     title: title.toLowerCase(),
+                    price,
                 },
             })
         );

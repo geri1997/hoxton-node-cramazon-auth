@@ -4,15 +4,15 @@ const prisma = new PrismaClient();
 const users: Prisma.UserCreateInput[] = [
     {
         name: 'Nicolas',
-        email: 'nicolas@email.com',
+        email: 'nicolas@email.com',password:'test123'
     },
     {
         name: 'Rinor',
-        email: 'rinor@email.com',
+        email: 'rinor@email.com',password:'test123'
     },
     {
         name: 'Arita',
-        email: 'arita@email.com',
+        email: 'arita@email.com',password:'test123'
     },
 ];
 
@@ -20,26 +20,32 @@ const items: Prisma.ItemCreateInput[] = [
     {
         title: 'Laptop',
         image: 'laptop.jpg',
+        price:18.99
     },
     {
         title: 'Bicycle',
         image: 'bicycle.jpg',
+        price:9.99
     },
     {
         title: 'Car',
         image: 'car.jpg',
+        price:14.99
     },
     {
         title: 'Table',
         image: 'table.jpg',
+        price:4.99
     },
     {
         title: 'Shelf',
         image: 'shelf.jpg',
+        price:30.99
     },
     {
         title: 'Bed',
         image: 'bed.jpg',
+        price:50.99
     },
 ];
 const orders: Prisma.OrderCreateInput[] = [
