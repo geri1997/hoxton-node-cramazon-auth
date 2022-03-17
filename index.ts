@@ -14,8 +14,19 @@ const { user, item, order } = new PrismaClient({
 const app = express();
 app.use(
     cors({
-        origin: '*',
-        methods: ['GET', 'PATCH', 'POST', 'DELETE', 'HEAD', 'OPTIONS', 'PUT'],
+        credentials: true,
+        origin: (origin, callback) => {
+            //@ts-ignore
+            if (
+                ['http://localhost:3000', 'http://localhost:3009'].indexOf(
+                    origin!
+                ) !== -1
+            ) {
+                callback(null, true);
+            } else {
+                callback(new Error('Not allowed by CORS'));
+            }
+        },
     })
 );
 app.use(cookieParser());
@@ -87,7 +98,8 @@ app.post('/login', async (req, res) => {
         if (passwordMatches) {
             // @ts-ignore
             const token = jwt.sign({ id: dbUser.id }, process.env.SECRET);
-            res.cookie('token', token, { maxAge: 90000000 });
+            res.cookie('token', token);
+            console.log(token);
             return res.send({
                 user: dbUser,
             });
@@ -104,10 +116,16 @@ app.post('/login', async (req, res) => {
 //     res.send({ message: 'test' });
 // });
 
+app.get('/sign-out', (req, res) => {
+    res.clearCookie('token')
+    res.send({ message: 'You are now signed out!' })
+  })
+
 app.get('/validate', async (req, res) => {
-    const token = req.headers.authorization || '';
+    if (!req.cookies.token) return res.send({ error: 'Missing token.' });
+
     // @ts-ignore
-    const decodedData = jwt.verify(token, process.env.SECRET);
+    const decodedData = jwt.verify(req.cookies.token, process.env.SECRET);
 
     const userToSend = await user.findUnique({
         where: { id: decodedData.id },

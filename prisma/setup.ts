@@ -1,18 +1,22 @@
 import { Prisma, PrismaClient } from '@prisma/client';
+import bcrypt from 'bcrypt';
 const prisma = new PrismaClient();
 
 const users: Prisma.UserCreateInput[] = [
     {
         name: 'Nicolas',
-        email: 'nicolas@email.com',password:'test123'
+        email: 'nicolas@email.com',
+        password: bcrypt.hashSync('test123', 8),
     },
     {
         name: 'Rinor',
-        email: 'rinor@email.com',password:'test123'
+        email: 'rinor@email.com',
+        password: bcrypt.hashSync('test123', 8),
     },
     {
         name: 'Arita',
-        email: 'arita@email.com',password:'test123'
+        email: 'arita@email.com',
+        password: bcrypt.hashSync('test123', 8),
     },
 ];
 
@@ -20,32 +24,32 @@ const items: Prisma.ItemCreateInput[] = [
     {
         title: 'Laptop',
         image: 'laptop.jpg',
-        price:18.99
+        price: 18.99,
     },
     {
         title: 'Bicycle',
         image: 'bicycle.jpg',
-        price:9.99
+        price: 9.99,
     },
     {
         title: 'Car',
         image: 'car.jpg',
-        price:14.99
+        price: 14.99,
     },
     {
         title: 'Table',
         image: 'table.jpg',
-        price:4.99
+        price: 4.99,
     },
     {
         title: 'Shelf',
         image: 'shelf.jpg',
-        price:30.99
+        price: 30.99,
     },
     {
         title: 'Bed',
         image: 'bed.jpg',
-        price:50.99
+        price: 50.99,
     },
 ];
 const orders: Prisma.OrderCreateInput[] = [
@@ -113,10 +117,10 @@ async function setupData() {
     //         },
     //     });
     // }
-    await prisma.order.deleteMany()
-    await prisma.user.deleteMany()
-    await prisma.item.deleteMany()
-    
+    await prisma.order.deleteMany();
+    await prisma.user.deleteMany();
+    await prisma.item.deleteMany();
+
     for (const user of users) {
         user.name = user.name.toLowerCase();
         user.email = user.email.toLowerCase();
