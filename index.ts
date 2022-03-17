@@ -100,9 +100,7 @@ app.post('/login', async (req, res) => {
             const token = jwt.sign({ id: dbUser.id }, process.env.SECRET);
             res.cookie('token', token);
             console.log(token);
-            return res.send({
-                user: dbUser,
-            });
+            return res.send(dbUser);
         }
         throw Error;
     } catch (error) {
@@ -117,9 +115,9 @@ app.post('/login', async (req, res) => {
 // });
 
 app.get('/sign-out', (req, res) => {
-    res.clearCookie('token')
-    res.send({ message: 'You are now signed out!' })
-  })
+    res.clearCookie('token');
+    res.send({ message: 'You are now signed out!' });
+});
 
 app.get('/validate', async (req, res) => {
     if (!req.cookies.token) return res.send({ error: 'Missing token.' });

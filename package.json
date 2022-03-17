@@ -10,7 +10,10 @@
     "author": "",
     "license": "ISC",
     "devDependencies": {
-        "prisma": "^3.10.0"
+        "@swc/core": "^1.2.157",
+        "@swc/helpers": "^0.3.8",
+        "prisma": "^3.10.0",
+        "regenerator-runtime": "^0.13.9"
     },
     "dependencies": {
         "@prisma/client": "^3.10.0",
