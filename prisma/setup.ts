@@ -74,22 +74,22 @@ const orders: Prisma.OrderCreateInput[] = [
         User: { connect: { email: 'nicolas@email.com' } },
     },
     {
-        quantity: 10,
+        quantity: 4,
         Item: { connect: { title: 'bicycle' } },
         User: { connect: { email: 'arita@email.com' } },
     },
     {
-        quantity: 20,
+        quantity: 5,
         Item: { connect: { title: 'laptop' } },
         User: { connect: { email: 'rinor@email.com' } },
     },
     {
-        quantity: 13,
+        quantity: 6,
         Item: { connect: { title: 'car' } },
         User: { connect: { email: 'nicolas@email.com' } },
     },
     {
-        quantity: 17,
+        quantity: 1,
         Item: { connect: { title: 'bed' } },
         User: { connect: { email: 'rinor@email.com' } },
     },
